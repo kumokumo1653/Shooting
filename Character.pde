@@ -11,8 +11,8 @@ public class Character {
     int preX;
     int preY;
 
-    float speed = 4.0;
-
+    float speed = 8.0;
+    
     Character(int HP, int SP, int x, int y){
         maxHP = HP;
         maxSP = SP;
@@ -29,12 +29,12 @@ public class Character {
         float b = -2 * PI / 100 * t;
         noStroke();
         fill(#ffffff);
-        ellipse(x, y, 200, 200);
+        ellipse(x, y, 100, 100);
         strokeWeight(10);
         stroke(#ffcc00);
         noFill();
-        arc((float)x, (float)y, (float)230, (float)230, a, a + PI);
-        arc((float)x, (float)y, (float)260, (float)260, b, b + PI / 2);
+        arc((float)x, (float)y, (float)130, (float)130, a, a + PI);
+        arc((float)x, (float)y, (float)160, (float)160, b, b + PI / 2);
     }
 
     public void drawStatus(){
