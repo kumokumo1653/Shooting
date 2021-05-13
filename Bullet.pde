@@ -1,27 +1,20 @@
 class Bullet{
-    public int x;
-    public int y;
+    public PVector pos;
 
-    float speedX;
-    float speedY;
-    int preX;
-    int preY;
+    PVector speed;
+    PVector prePos;
 
-    public int damage = 10;
-    Bullet(int x, int y, float speedX, float speedY){
-        this.x = x;
-        this.y = y;
-        this.speedX = speedX;
-        this.speedY = speedY;
-        preX = x;
-        preY = y;
+    public int damage = 10; 
+    Bullet(PVector pos, PVector speed){
+        this.pos = new PVector(pos.x, pos.y);
+        this.speed = new PVector(speed.x, speed.y);
+        prePos = new PVector(pos.x, pos.y);
 
     }
 
     void move(){
-        preX = x;
-        preY = y;
-        x += speedX;
-        y += speedY;
+        prePos.set(pos.get());
+        pos.x += speed.x;
+        pos.y += speed.y;
     }
 }

@@ -5,21 +5,17 @@ public class Character {
     int hp;
     int sp;
 
-    public int x;
-    public int y;
+    public PVector pos;
     
-    int preX;
-    int preY;
-
+    public PVector prePos;
     float speed = 8.0;
-    
-    Character(int HP, int SP, int x, int y){
+   
+    ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+    Character(int HP, int SP, PVector pos){
         maxHP = HP;
         maxSP = SP;
-        this.x = x;
-        this.y = y;
-        preX = x;
-        preY = y;
+        this.pos = new PVector(pos.x, pos.y);
+        prePos = new PVector(pos.x, pos.y);
         hp = maxHP;
         sp = maxSP;
     }
@@ -29,12 +25,12 @@ public class Character {
         float b = -2 * PI / 100 * t;
         noStroke();
         fill(#ffffff);
-        ellipse(x, y, 100, 100);
+        ellipse(pos.x, pos.y, 100, 100);
         strokeWeight(10);
         stroke(#ffcc00);
         noFill();
-        arc((float)x, (float)y, (float)130, (float)130, a, a + PI);
-        arc((float)x, (float)y, (float)160, (float)160, b, b + PI / 2);
+        arc(pos.x, pos.y, (float)130, (float)130, a, a + PI);
+        arc(pos.x, pos.y, (float)160, (float)160, b, b + PI / 2);
     }
 
     public void drawStatus(){
@@ -50,10 +46,11 @@ public class Character {
     }
 
 
-    public void move(int hMovement, int vMovemnt){
-        preX = x;
-        preY = y;
-        x += hMovement * speed;
-        y += vMovemnt * speed;
+    public void move(PVector movemnt){
+        prePos.set(pos.get());
+        pos.x += movement.x * speed;
+        pos.y += movemnt.y * speed;
     }
+
+    public void shoot(){}
 }

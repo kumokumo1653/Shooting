@@ -2,15 +2,16 @@ Character c;
 int t;
 int horizontal = 0;
 int vertical = 0;
+PVector movement = new PVector(0,0);
 void setup(){
     size(1600,900);
-    c = new Character(100, 100, 800, 450);
+    c = new Character(100, 100, new PVector(800, 450));
     t = 0;
 }
 
 void draw(){
     background(#000000);
-    c.move(horizontal, vertical);
+    c.move(movement);
     c.drawCharacter(t++);
     c.drawStatus();
 
@@ -18,22 +19,22 @@ void draw(){
 
 void keyPressed() {
     if(key == 'w')
-        vertical = -1;
+        movement.y = -1;
     if(key == 's')
-        vertical = 1;
+        movement.y = 1;
     if(key == 'a')
-        horizontal = -1;
+        movement.x = -1;
     if(key == 'd')
-        horizontal = 1;
+        movement.x = 1;
 }
 
 void keyReleased() {
     if(key == 'w')
-        vertical = 0;
+        movement.y = 0;
     if(key == 's')
-        vertical = 0;
+        movement.y = 0;
     if(key == 'a')
-        horizontal = 0;
+        movement.x = 0;
     if(key == 'd')
-        horizontal = 0;
+        movement.x = 0;
 }
