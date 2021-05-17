@@ -3,7 +3,7 @@ class Bullet{
 
     PVector speed;
     PVector prePos;
-    int r = 20;
+    public int r = 20;
     public int damage = 10; 
     Bullet(PVector pos, PVector speed){
         this.pos = new PVector(pos.x, pos.y);

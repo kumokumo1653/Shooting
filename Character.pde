@@ -4,7 +4,7 @@ public class Character {
 
     int hp;
     int sp;
-    int r = 100;
+    public int r = 100;
     int W;
     int H;
     public PVector pos;
@@ -55,17 +55,48 @@ public class Character {
         prePos.set(pos.get());
         pos.x += movement.x * speed;
         pos.y += movemnt.y * speed;
-        if(!collision()){
-            pos.set(prePos.get());
-        }
     }
 
-    public boolean collision(){
-        if(pos.x + r / 2 > W || pos.x - r / 2 < 0)
-            return false;
-        if(pos.y + r / 2 > H || pos.y - r / 2 < 0)
-            return false;
-        return true;
+    public boolean collision(Character enemy){
+        boolean val = true;
+        if(pos.x + r / 2 > W || pos.x - r / 2 < 0){
+            pos.set(prePos.get());
+            val = false;
+        }
+        if(pos.y + r / 2 > H || pos.y - r / 2 < 0){
+            pos.set(prePos.get());
+            val = false;
+        }
+        
+        //敵との衝突
+        if(PVector.dist(pos, enemy.pos) <= r / 2 + enemy.r / 2){
+
+            pos.set(prePos.get());
+            enemy.pos.set(enemy.prePos.get());
+            val = false;
+        }
+        
+        //敵の弾との衝突
+        for (int i = 0; i < enemy.bullets.size(); i++){
+            if(PVector.dist(pos, enemy.bullets.get(i).pos) <= r / 2 + enemy.bullets.get(i).r / 2){
+                println("shot");
+                enemy.bullets.remove(i);
+                i--;
+                val = false;
+            }
+        }
+
+        //自分の球の衝突
+        for (int i = 0; i < this.bullets.size(); i++){
+            if(PVector.dist(enemy.pos, this.bullets.get(i).pos) <= enemy.r / 2 + this.bullets.get(i).r / 2){
+                println("hit");
+                bullets.remove(i);
+                i--;
+                val = false;
+            }
+        }
+
+        return val;
     }
     public void shoot(PVector target){
         PVector d = PVector.sub(target, pos);
@@ -78,9 +109,13 @@ public class Character {
             if(!bullets.get(i).move(W, H)){
                 bullets.remove(i);
                 i--;
-            }else{
-                bullets.get(i).drawBullet();
             }
         }
+    }
+
+    public void drawBullets(){
+        for(int i = 0; i < bullets.size(); i++)
+            bullets.get(i).drawBullet();
+        
     }
 }

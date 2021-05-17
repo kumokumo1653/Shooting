@@ -1,4 +1,5 @@
 Character c;
+Character enemy;
 int t;
 int horizontal = 0;
 int vertical = 0;
@@ -14,19 +15,30 @@ void setup(){
 
     c = new Character(100, 100, new PVector(800, 450), W, H);
     t = 0;
+
+    enemy = new Character(100,100, new PVector(100,100), W, H);
     
 }
 
 void draw(){
     background(#000000);
     c.move(movement);
-    c.drawCharacter(t++);
-    c.drawStatus();
     if(shoot){
         shoot = false;
-        c.shoot(new PVector(mouseX, mouseY));
+        enemy.shoot(new PVector(mouseX, mouseY));
     }
     c.bulletsControl();
+    enemy.bulletsControl();
+
+    //衝突
+    c.collision(enemy);
+
+    //描画
+    c.drawCharacter(t++);
+    c.drawBullets();
+    c.drawStatus();
+    enemy.drawCharacter(t);
+    enemy.drawBullets();
 }
 
 void keyPressed() {
