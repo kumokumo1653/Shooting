@@ -1,12 +1,12 @@
 Character c;
 Character enemy;
 int t;
-int horizontal = 0;
-int vertical = 0;
-PVector movement = new PVector(0,0);
+PVector cMovement = new PVector(0,0);
+PVector eMovement = new PVector(0,0);
 int W = 1600;
 int H = 900;
-boolean shoot = false;
+boolean cshoot = false;
+boolean eshoot = false;
 
 void settings(){
     size(W, H);
@@ -22,9 +22,15 @@ void setup(){
 
 void draw(){
     background(#000000);
-    c.move(movement);
-    if(shoot){
-        shoot = false;
+    c.move(cMovement);
+    enemy.move(eMovement);
+
+    if(cshoot){
+        cshoot = false;
+        c.shoot(new PVector(mouseX, mouseY));
+    }
+    if(eshoot){
+        eshoot = false;
         enemy.shoot(new PVector(mouseX, mouseY));
     }
     c.bulletsControl();
@@ -32,6 +38,7 @@ void draw(){
 
     //衝突
     c.collision(enemy);
+    enemy.collision(c);
 
     //描画
     c.drawCharacter(t++);
@@ -43,28 +50,47 @@ void draw(){
 
 void keyPressed() {
     if(key == 'w')
-        movement.y = -1;
+        cMovement.y = -1;
     if(key == 's')
-        movement.y = 1;
+        cMovement.y = 1;
     if(key == 'a')
-        movement.x = -1;
+        cMovement.x = -1;
     if(key == 'd')
-        movement.x = 1;
+        cMovement.x = 1;
+    if(key == 'i')
+        eMovement.y = -1;
+    if(key == 'k')
+        eMovement.y = 1;
+    if(key == 'j')
+        eMovement.x = -1;
+    if(key == 'l')
+        eMovement.x = 1;
 }
 
 void keyReleased() {
     if(key == 'w')
-        movement.y = 0;
+        cMovement.y = 0;
     if(key == 's')
-        movement.y = 0;
+        cMovement.y = 0;
     if(key == 'a')
-        movement.x = 0;
+        cMovement.x = 0;
     if(key == 'd')
-        movement.x = 0;
+        cMovement.x = 0;
+    if(key == 'i')
+        eMovement.y = 0;
+    if(key == 'k')
+        eMovement.y = 0;
+    if(key == 'j')
+        eMovement.x = 0;
+    if(key == 'l')
+        eMovement.x = 0;
 }
 
 void mousePressed() {
     if(mouseButton == LEFT){
-        shoot = true;
+        cshoot = true;
+    }
+    if(mouseButton == RIGHT){
+        eshoot = true;
     }
 }

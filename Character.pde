@@ -44,17 +44,20 @@ public class Character {
         text("HP", 10,15);
         strokeWeight(20);
         stroke(#ffffff);
-        line(60,10, 60 + 200 / maxHP * hp, 10);
+        if(hp > 0)
+            line(60,10, 60 + 200 / maxHP * hp, 10);
 
         text("SP", 10,40);
-        line(60,40, 60 + 200 / maxSP * sp, 40);
+        if(sp > 0){
+            line(60,40, 60 + 200 / maxSP * sp, 40);
+        }
     }
 
 
-    public void move(PVector movemnt){
+    public void move(PVector movement){
         prePos.set(pos.get());
         pos.x += movement.x * speed;
-        pos.y += movemnt.y * speed;
+        pos.y += movement.y * speed;
     }
 
     public boolean collision(Character enemy){
@@ -82,6 +85,8 @@ public class Character {
                 println("shot");
                 enemy.bullets.remove(i);
                 i--;
+                hp -= 10;
+                println(hp);
                 val = false;
             }
         }
@@ -99,9 +104,14 @@ public class Character {
         return val;
     }
     public void shoot(PVector target){
-        PVector d = PVector.sub(target, pos);
-        d.normalize();
-        bullets.add(new Bullet(pos, PVector.mult(d, bulletSpeed)));
+
+        if(sp >= 10){
+            PVector d = PVector.sub(target, pos);
+            d.normalize();
+            bullets.add(new Bullet(pos, PVector.mult(d, bulletSpeed)));
+            sp -= 10;
+            println(sp);
+        }
     }
 
     public void bulletsControl(){
