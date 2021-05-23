@@ -23,6 +23,7 @@ public class Character {
 
         this.W = W;
         this.H = H;
+
     }
 
     public void drawCharacter(int t){
@@ -41,15 +42,15 @@ public class Character {
     public void drawStatus(){
         fill(#ffffff);
         textSize(20);
-        text("HP", 10,15);
-        strokeWeight(20);
+        text("HP", 10,20);
+        strokeWeight(1);
         stroke(#ffffff);
         if(hp > 0)
-            line(60,10, 60 + 200 / maxHP * hp, 10);
+            rect(55, 5, 200 * (hp / (float)maxHP), 20);
 
-        text("SP", 10,40);
+        text("SP", 10,50);
         if(sp > 0){
-            line(60,40, 60 + 200 / maxSP * sp, 40);
+            rect(55, 30, 200 * (sp / (float)maxSP), 20);
         }
     }
 
@@ -82,11 +83,9 @@ public class Character {
         //敵の弾との衝突
         for (int i = 0; i < enemy.bullets.size(); i++){
             if(PVector.dist(pos, enemy.bullets.get(i).pos) <= r / 2 + enemy.bullets.get(i).r / 2){
-                println("shot");
                 enemy.bullets.remove(i);
                 i--;
                 hp -= 10;
-                println(hp);
                 val = false;
             }
         }
@@ -94,7 +93,6 @@ public class Character {
         //自分の球の衝突
         for (int i = 0; i < this.bullets.size(); i++){
             if(PVector.dist(enemy.pos, this.bullets.get(i).pos) <= enemy.r / 2 + this.bullets.get(i).r / 2){
-                println("hit");
                 bullets.remove(i);
                 i--;
                 val = false;
@@ -110,7 +108,6 @@ public class Character {
             d.normalize();
             bullets.add(new Bullet(pos, PVector.mult(d, bulletSpeed)));
             sp -= 10;
-            println(sp);
         }
     }
 
@@ -127,5 +124,12 @@ public class Character {
         for(int i = 0; i < bullets.size(); i++)
             bullets.get(i).drawBullet();
         
+    }
+
+    public void recovery(int val){
+        if(sp < maxSP){
+            sp += val;
+            sp = sp > maxSP ? maxSP : sp;
+        }
     }
 }

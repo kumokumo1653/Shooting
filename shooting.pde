@@ -1,4 +1,4 @@
-Character c;
+Character me;
 Character enemy;
 int t;
 PVector cMovement = new PVector(0,0);
@@ -8,89 +8,121 @@ int H = 900;
 boolean cshoot = false;
 boolean eshoot = false;
 
+public enum Mode {
+    READY,
+    PLAY,
+    RESULT
+}
+Mode mode;
 void settings(){
     size(W, H);
 }
+
 void setup(){
 
-    c = new Character(100, 100, new PVector(800, 450), W, H);
     t = 0;
-
-    enemy = new Character(100,100, new PVector(100,100), W, H);
     
+    mode = Mode.READY;
+
 }
 
 void draw(){
     background(#000000);
-    c.move(cMovement);
-    enemy.move(eMovement);
+    if(mode == Mode.READY){
+        fill(#ffffff);
+        rect(400, 600, 150, 50);
+        textSize(70);
+        textAlign(CENTER);
+        text("Select Player", 800, 450);
+        rect(1050, 600, 150, 50);
+        fill(#000000);
+        textSize(30);
+        textAlign(LEFT);
+        text("PlayerA", 420, 635);
+        text("PlayerB", 1070, 635);
 
-    if(cshoot){
-        cshoot = false;
-        c.shoot(new PVector(mouseX, mouseY));
     }
-    if(eshoot){
-        eshoot = false;
-        enemy.shoot(new PVector(mouseX, mouseY));
+    if(mode == Mode.PLAY){
+        me.move(cMovement);
+        enemy.move(eMovement);
+
+        if(cshoot){
+            cshoot = false;
+            me.shoot(new PVector(mouseX, mouseY));
+        }
+        if(eshoot){
+            eshoot = false;
+            enemy.shoot(new PVector(mouseX, mouseY));
+        }
+        me.bulletsControl();
+        enemy.bulletsControl();
+
+        //衝突
+        me.collision(enemy);
+        enemy.collision(me);
+
+        //描画
+        me.drawCharacter(t++);
+        me.drawBullets();
+        me.drawStatus();
+        enemy.drawCharacter(t);
+        enemy.drawBullets();
+
+        //spの回復
+        if(frameCount % 60 == 0){
+            me.recovery(1);
+            enemy.recovery(1);
+        }
     }
-    c.bulletsControl();
-    enemy.bulletsControl();
-
-    //衝突
-    c.collision(enemy);
-    enemy.collision(c);
-
-    //描画
-    c.drawCharacter(t++);
-    c.drawBullets();
-    c.drawStatus();
-    enemy.drawCharacter(t);
-    enemy.drawBullets();
 }
 
 void keyPressed() {
-    if(key == 'w')
-        cMovement.y = -1;
-    if(key == 's')
-        cMovement.y = 1;
-    if(key == 'a')
-        cMovement.x = -1;
-    if(key == 'd')
-        cMovement.x = 1;
-    if(key == 'i')
-        eMovement.y = -1;
-    if(key == 'k')
-        eMovement.y = 1;
-    if(key == 'j')
-        eMovement.x = -1;
-    if(key == 'l')
-        eMovement.x = 1;
+    if(mode == Mode.PLAY){
+        if(key == 'w')
+            cMovement.y = -1;
+        if(key == 's')
+            cMovement.y = 1;
+        if(key == 'a')
+            cMovement.x = -1;
+        if(key == 'd')
+            cMovement.x = 1;
+    }
 }
 
 void keyReleased() {
-    if(key == 'w')
-        cMovement.y = 0;
-    if(key == 's')
-        cMovement.y = 0;
-    if(key == 'a')
-        cMovement.x = 0;
-    if(key == 'd')
-        cMovement.x = 0;
-    if(key == 'i')
-        eMovement.y = 0;
-    if(key == 'k')
-        eMovement.y = 0;
-    if(key == 'j')
-        eMovement.x = 0;
-    if(key == 'l')
-        eMovement.x = 0;
+    if(mode == Mode.PLAY){
+        if(key == 'w')
+            cMovement.y = 0;
+        if(key == 's')
+            cMovement.y = 0;
+        if(key == 'a')
+            cMovement.x = 0;
+        if(key == 'd')
+            cMovement.x = 0;
+    }
 }
 
 void mousePressed() {
-    if(mouseButton == LEFT){
-        cshoot = true;
+    if(mode == Mode.PLAY){
+        if(mouseButton == LEFT){
+            cshoot = true;
+        }
     }
-    if(mouseButton == RIGHT){
-        eshoot = true;
+    if(mode == Mode.READY){
+        if(mouseButton == LEFT){
+            if(mouseX >= 400 && mouseX <= 550 && mouseY >= 600 && mouseY <= 650){
+                println("a");
+                mode = Mode.PLAY;
+                me = new Character(100, 100, new PVector(800, 450), W, H);
+                enemy = new Character(100,100, new PVector(100,100), W, H);
+            }
+            if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
+                println("b");
+                mode = Mode.PLAY;
+                enemy = new Character(100, 100, new PVector(800, 450), W, H);
+                me = new Character(100,100, new PVector(100,100), W, H);
+            }
+            
+        }
     }
 }
