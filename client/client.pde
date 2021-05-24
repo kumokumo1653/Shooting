@@ -12,8 +12,8 @@ boolean cshoot = false;
 boolean eshoot = false;
 PVector cMouse = new PVector(0, 0);
 PVector eMouse = new PVector(0, 0);
-String name;
-String enemyName;
+String name = "";
+String enemyName = "";
 
 public enum Mode {
     READY,
@@ -119,18 +119,34 @@ void mousePressed() {
     if(mode == Mode.READY){
         if(mouseButton == LEFT){
             if(mouseX >= 400 && mouseX <= 550 && mouseY >= 600 && mouseY <= 650){
+              if(enemyName.equals("a")){
+                textAlign(CENTER);
+                text("Already selected characters", 800, 600);
+                textAlign(LEFT);
+              }else{
                 name = "a";
                 enemyName = "b";
                 mode = Mode.PLAY;
                 me = new Character(100, 100, new PVector(800, 450), W, H);
                 enemy = new Character(100,100, new PVector(100,100), W, H);
+                //サーバーに送信
+                client.write("a\n");
+              }
             }
             if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
+              if(enemyName.equals("b")){
+                textAlign(CENTER);
+                text("Already selected characters", 800, 600);
+                textAlign(LEFT);
+              }else{
                 name = "b";
                 enemyName = "a";
                 mode = Mode.PLAY;
                 enemy = new Character(100, 100, new PVector(800, 450), W, H);
                 me = new Character(100,100, new PVector(100,100), W, H);
+                //サーバーに送信
+                client.write("b\n");
+              }
             }
             
         }
@@ -143,10 +159,18 @@ void clientEvent(Client client) {
   if (s != null) {
     //分割
     String[] msg = splitTokens(s);
-    if(msg[0].equals(enemyName)){
-      eMovement = new PVector(Float.parseFloat(msg[1]), Float.parseFloat(msg[2]));
-      eshoot = msg[3].equals("true") ? true : false;
-      eMouse = new PVector(Float.parseFloat(msg[4]), Float.parseFloat(msg[5]));
+    if(mode == Mode.READY){
+      //character未設定のとき
+      if(name.equals("")){
+        enemyName = msg[0];
+      }
+    }
+    if(mode == Mode.PLAY){
+      if(msg[0].equals(enemyName)){
+        eMovement = new PVector(Float.parseFloat(msg[1]), Float.parseFloat(msg[2]));
+        eshoot = msg[3].equals("true") ? true : false;
+        eMouse = new PVector(Float.parseFloat(msg[4]), Float.parseFloat(msg[5]));
+      }
     }
   }
 }
