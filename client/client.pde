@@ -14,6 +14,7 @@ PVector cMouse = new PVector(0, 0);
 PVector eMouse = new PVector(0, 0);
 String name = "";
 String enemyName = "";
+boolean select = false;
 
 public enum Mode {
     READY,
@@ -39,6 +40,10 @@ void draw() {
         textSize(70);
         textAlign(CENTER);
         text("Select Player", 800, 450);
+        if(select){
+          textSize(45);
+          text("Already selected characters", 800, 550);
+        }
         rect(1050, 600, 150, 50);
         fill(#000000);
         textSize(30);
@@ -120,9 +125,7 @@ void mousePressed() {
         if(mouseButton == LEFT){
             if(mouseX >= 400 && mouseX <= 550 && mouseY >= 600 && mouseY <= 650){
               if(enemyName.equals("a")){
-                textAlign(CENTER);
-                text("Already selected characters", 800, 600);
-                textAlign(LEFT);
+                select = true;
               }else{
                 name = "a";
                 enemyName = "b";
@@ -135,9 +138,7 @@ void mousePressed() {
             }
             if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
               if(enemyName.equals("b")){
-                textAlign(CENTER);
-                text("Already selected characters", 800, 600);
-                textAlign(LEFT);
+                select = true;
               }else{
                 name = "b";
                 enemyName = "a";
@@ -166,10 +167,12 @@ void clientEvent(Client client) {
       }
     }
     if(mode == Mode.PLAY){
-      if(msg[0].equals(enemyName)){
-        eMovement = new PVector(Float.parseFloat(msg[1]), Float.parseFloat(msg[2]));
-        eshoot = msg[3].equals("true") ? true : false;
-        eMouse = new PVector(Float.parseFloat(msg[4]), Float.parseFloat(msg[5]));
+      if(msg.length == 6){
+        if(msg[0].equals(enemyName)){
+          eMovement = new PVector(Float.parseFloat(msg[1]), Float.parseFloat(msg[2]));
+          eshoot = msg[3].equals("true") ? true : false;
+          eMouse = new PVector(Float.parseFloat(msg[4]), Float.parseFloat(msg[5]));
+        }
       }
     }
   }

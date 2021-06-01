@@ -8,7 +8,9 @@ void draw() {
   Client c = server.available();
   if (c != null) {
     String s = c.readStringUntil('\n');
-    
+
     server.write(s);
+    String[] msg = splitTokens(s);
+    println(msg[0]);
   }
 }
