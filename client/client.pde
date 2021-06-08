@@ -1,4 +1,5 @@
 import processing.net.*;
+import java.util.UUID;
 String serverAddress = "localhost";
 Client client;
 Character me;
@@ -16,6 +17,8 @@ boolean select = false;
 boolean waiting = false;
 boolean isWin = false;
 
+UUID id;
+
 public enum Mode {
     READY,
     PLAY,
@@ -30,6 +33,7 @@ void setup() {
   client = new Client(this, serverAddress, 5555);
   t = 0;
   mode = Mode.READY;
+  id = UUID.randomUUID();
 }
 void draw() {
     background(#000000);
@@ -40,10 +44,6 @@ void draw() {
         textSize(70);
         textAlign(CENTER);
         text("Select Player", 800, 450);
-        if(select){
-          textSize(45);
-          text("Already selected characters", 800, 550);
-        }
         rect(1050, 600, 150, 50);
         fill(#000000);
         textSize(30);
@@ -142,14 +142,20 @@ void mousePressed() {
         if(mouseButton == LEFT){
             if(mouseX >= 400 && mouseX <= 550 && mouseY >= 600 && mouseY <= 650){
                 //サーバーに送信
-                client.write("a\n");
+                client.write("a" + " " + id.toString() +"\n");
+                fill(#ffffff);
+                textSize(45);
+                textAlign(CENTER);
+                text("selectd Player: A", 800, 550);
             }
             if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
                 //サーバーに送信
-                client.write("b\n");
+                client.write("b" + " " + id.toString() +"\n");
+                textSize(45);
+                fill(#ffffff);
+                textAlign(CENTER);
+                text("selectd Player: B", 800, 550);
             }
-            enemy = new Character(100, 100, new PVector(800, 450), W, H);
-            me = new Character(100,100, new PVector(100,100), W, H);
             
         }
     }
@@ -162,8 +168,42 @@ void clientEvent(Client client) {
     //分割
     String[] msg = splitTokens(s);
     if(mode == Mode.READY){
-        enemyName = msg[0];
+      if(msg.length == 4){
+        println("match");
+        //uuidの大小で位置決め大きいほうが左側
+        //msg[0]のほうが大きい
+        if((msg[0].compareTo(msg[2]) > 0)){
+          //それが自分だったら
+          if(msg[0].equals(id.toString())){
+            me = new Character(100,100, new PVector(400,450), W, H);
+            enemy = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemyName = msg[2]; 
+            name = msg[0];
+          }else{
+            enemy = new Character(100,100, new PVector(400,450), W, H);
+            me = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemyName = msg[0]; 
+            name = msg[2];
+          }
+        }else{
+          //msg[2]のほうが大きい
+          if(msg[2].equals(id.toString())){
+            me = new Character(100,100, new PVector(400,450), W, H);
+            enemy = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemyName = msg[0]; 
+            name = msg[2];
+          }else{
+            enemy = new Character(100,100, new PVector(400,450), W, H);
+            me = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemyName = msg[2]; 
+            name = msg[0];
+          }
+          
+        }
+
+        mode = Mode.PLAY;
       }
+    }
     
     if(mode == Mode.PLAY){
       if(msg.length == 4){
