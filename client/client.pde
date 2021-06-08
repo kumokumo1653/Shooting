@@ -10,11 +10,11 @@ int W = 1600;
 int H = 900;
 boolean cshoot = false;
 boolean eshoot = false;
-PVector cMouse = new PVector(0, 0);
-PVector eMouse = new PVector(0, 0);
 String name = "";
 String enemyName = "";
 boolean select = false;
+boolean waiting = false;
+boolean isWin = false;
 
 public enum Mode {
     READY,
@@ -54,17 +54,17 @@ void draw() {
     }
     if(mode == Mode.PLAY){
         //サーバーに送信
-        client.write(name + " " + cMovement.x + " " + cMovement.y + " " +  cshoot + " " + cMouse.x + " " + cMouse.y + '\n');
+        client.write(name + " " + cMovement.x + " " + cMovement.y + " " +  cshoot + '\n');
         me.move(cMovement);
         enemy.move(eMovement);
 
         if(cshoot){
             cshoot = false;
-            me.shoot(cMouse);
+            me.shoot(enemy.pos);
         }
         if(eshoot){
             eshoot = false;
-            enemy.shoot(eMouse);
+            enemy.shoot(me.pos);
         }
         me.bulletsControl();
         enemy.bulletsControl();
@@ -72,6 +72,16 @@ void draw() {
         //衝突
         me.collision(enemy);
         enemy.collision(me);
+
+        //生死判定
+        if(me.isDie){
+          isWin = false;
+          mode = Mode.RESULT;
+        }
+        if(enemy.isDie){
+          isWin = true;
+          mode = Mode.RESULT;
+        }
 
         //描画
         me.drawCharacter(t++);
@@ -85,6 +95,17 @@ void draw() {
             me.recovery(1);
             enemy.recovery(1);
         }
+    }
+
+    if(mode == Mode.RESULT){
+      textSize(100);
+      textAlign(CENTER);
+      if(isWin){
+        text("You WIN", 800, 450);
+      }else{
+        text("You LOSE", 800, 450);
+      }
+
     }
 }
 
@@ -111,44 +132,24 @@ void keyReleased() {
             cMovement.x = 0;
         if(key == 'd')
             cMovement.x = 0;
+        if(key == 'j')
+            cshoot = true;
     }
 }
 
 void mousePressed() {
-    if(mode == Mode.PLAY){
-        if(mouseButton == LEFT){
-            cshoot = true;
-            cMouse = new PVector(mouseX, mouseY);
-        }
-    }
     if(mode == Mode.READY){
         if(mouseButton == LEFT){
             if(mouseX >= 400 && mouseX <= 550 && mouseY >= 600 && mouseY <= 650){
-              if(enemyName.equals("a")){
-                select = true;
-              }else{
-                name = "a";
-                enemyName = "b";
-                mode = Mode.PLAY;
-                me = new Character(100, 100, new PVector(800, 450), W, H);
-                enemy = new Character(100,100, new PVector(100,100), W, H);
                 //サーバーに送信
                 client.write("a\n");
-              }
             }
             if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
-              if(enemyName.equals("b")){
-                select = true;
-              }else{
-                name = "b";
-                enemyName = "a";
-                mode = Mode.PLAY;
-                enemy = new Character(100, 100, new PVector(800, 450), W, H);
-                me = new Character(100,100, new PVector(100,100), W, H);
                 //サーバーに送信
                 client.write("b\n");
-              }
             }
+            enemy = new Character(100, 100, new PVector(800, 450), W, H);
+            me = new Character(100,100, new PVector(100,100), W, H);
             
         }
     }
@@ -161,17 +162,14 @@ void clientEvent(Client client) {
     //分割
     String[] msg = splitTokens(s);
     if(mode == Mode.READY){
-      //character未設定のとき
-      if(name.equals("")){
         enemyName = msg[0];
       }
-    }
+    
     if(mode == Mode.PLAY){
-      if(msg.length == 6){
+      if(msg.length == 4){
         if(msg[0].equals(enemyName)){
           eMovement = new PVector(Float.parseFloat(msg[1]), Float.parseFloat(msg[2]));
           eshoot = msg[3].equals("true") ? true : false;
-          eMouse = new PVector(Float.parseFloat(msg[4]), Float.parseFloat(msg[5]));
         }
       }
     }

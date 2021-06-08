@@ -2,6 +2,8 @@ public class Character {
     public int maxHP;
     public int maxSP;
 
+    public boolean isDie;
+
     int hp;
     int sp;
     public int r = 100;
@@ -20,6 +22,8 @@ public class Character {
         prePos = new PVector(pos.x, pos.y);
         hp = maxHP;
         sp = maxSP;
+        
+        isDie = false;
 
         this.W = W;
         this.H = H;
@@ -86,6 +90,10 @@ public class Character {
                 enemy.bullets.remove(i);
                 i--;
                 hp -= 10;
+                println("asdf");
+                if(hp <= 0){
+                    isDie = true;
+                }
                 val = false;
             }
         }
@@ -95,6 +103,11 @@ public class Character {
             if(PVector.dist(enemy.pos, this.bullets.get(i).pos) <= enemy.r / 2 + this.bullets.get(i).r / 2){
                 bullets.remove(i);
                 i--;
+                enemy.hp -= 10;
+
+                if(enemy.hp <= 0){
+                    enemy.isDie = true;
+                }
                 val = false;
             }
         }
