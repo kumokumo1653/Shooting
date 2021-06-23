@@ -168,8 +168,7 @@ void clientEvent(Client client) {
     //分割
     String[] msg = splitTokens(s);
     if(mode == Mode.READY){
-      if(msg.length == 4){
-        println("match");
+      if(msg.length == 5){
         //uuidの大小で位置決め大きいほうが左側
         //msg[0]のほうが大きい
         if((msg[0].compareTo(msg[2]) > 0)){
@@ -200,7 +199,6 @@ void clientEvent(Client client) {
           }
           
         }
-
         mode = Mode.PLAY;
       }
     }

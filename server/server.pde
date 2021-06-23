@@ -25,10 +25,11 @@ void draw() {
         for (String key : players.keySet()) {
           sendMsg += key + " " + players.get(key) + " ";
         }
-        sendMsg += "\n";
+        sendMsg += "READY\n";
 
         print(sendMsg);
         server.write(sendMsg);
+        players.clear();
       }
     }else{
       server.write(s);
