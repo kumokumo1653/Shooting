@@ -174,26 +174,26 @@ void clientEvent(Client client) {
         if((msg[0].compareTo(msg[2]) > 0)){
           //それが自分だったら
           if(msg[0].equals(id.toString())){
-            me = new Character(100,100, new PVector(400,450), W, H);
-            enemy = new Character(100, 100, new PVector(1200, 450), W, H);
+            me = new Character(100,100, new PVector(400,450), W, H, msg[1]);
+            enemy = new Character(100, 100, new PVector(1200, 450), W, H, msg[3]);
             enemyName = msg[2]; 
             name = msg[0];
           }else{
-            enemy = new Character(100,100, new PVector(400,450), W, H);
-            me = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemy = new Character(100,100, new PVector(400,450), W, H, msg[1]);
+            me = new Character(100, 100, new PVector(1200, 450), W, H, msg[3]);
             enemyName = msg[0]; 
             name = msg[2];
           }
         }else{
           //msg[2]のほうが大きい
           if(msg[2].equals(id.toString())){
-            me = new Character(100,100, new PVector(400,450), W, H);
-            enemy = new Character(100, 100, new PVector(1200, 450), W, H);
+            me = new Character(100,100, new PVector(400,450), W, H, msg[3]);
+            enemy = new Character(100, 100, new PVector(1200, 450), W, H, msg[1]);
             enemyName = msg[0]; 
             name = msg[2];
           }else{
-            enemy = new Character(100,100, new PVector(400,450), W, H);
-            me = new Character(100, 100, new PVector(1200, 450), W, H);
+            enemy = new Character(100,100, new PVector(400,450), W, H, msg[3]);
+            me = new Character(100, 100, new PVector(1200, 450), W, H, msg[1]);
             enemyName = msg[2]; 
             name = msg[0];
           }

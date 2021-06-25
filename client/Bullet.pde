@@ -5,11 +5,12 @@ class Bullet{
     PVector prePos;
     public int r = 20;
     public int damage = 10; 
-    Bullet(PVector pos, PVector speed){
+    Bullet(PVector pos, PVector speed, int r, int damage){
         this.pos = new PVector(pos.x, pos.y);
         this.speed = new PVector(speed.x, speed.y);
         prePos = new PVector(pos.x, pos.y);
-
+        this.r= r;
+        this.damage = damage;
     }
 
     void drawBullet(){

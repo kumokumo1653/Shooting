@@ -14,8 +14,11 @@ public class Character {
     public PVector prePos;
     float speed = 8.0;
     float bulletSpeed = 20;
+    int consum = 10;
+    int bulletR;
+    int bulletDamage;
     ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-    Character(int HP, int SP, PVector pos, int W, int H){
+    Character(int HP, int SP, PVector pos, int W, int H, String type){
         maxHP = HP;
         maxSP = SP;
         this.pos = new PVector(pos.x, pos.y);
@@ -27,6 +30,20 @@ public class Character {
 
         this.W = W;
         this.H = H;
+
+
+        if(type.equals("a")){
+            r = 100;
+            speed = 8.0;
+            bulletR = 30;
+            bulletDamage = 20;
+        }
+        if(type.equals("b")){
+            r = 50;
+            speed = 16.0;
+            bulletR = 20;
+            bulletDamage = 10;
+        }
 
     }
 
@@ -87,9 +104,9 @@ public class Character {
         //敵の弾との衝突
         for (int i = 0; i < enemy.bullets.size(); i++){
             if(PVector.dist(pos, enemy.bullets.get(i).pos) <= r / 2 + enemy.bullets.get(i).r / 2){
+                hp -= enemy.bullets.get(i).damage;
                 enemy.bullets.remove(i);
                 i--;
-                hp -= 10;
                 println("asdf");
                 if(hp <= 0){
                     isDie = true;
@@ -101,9 +118,9 @@ public class Character {
         //自分の球の衝突
         for (int i = 0; i < this.bullets.size(); i++){
             if(PVector.dist(enemy.pos, this.bullets.get(i).pos) <= enemy.r / 2 + this.bullets.get(i).r / 2){
+                enemy.hp -= this.bullets.get(i).damage;
                 bullets.remove(i);
                 i--;
-                enemy.hp -= 10;
 
                 if(enemy.hp <= 0){
                     enemy.isDie = true;
@@ -116,11 +133,11 @@ public class Character {
     }
     public void shoot(PVector target){
 
-        if(sp >= 10){
+        if(sp >= consum){
             PVector d = PVector.sub(target, pos);
             d.normalize();
-            bullets.add(new Bullet(pos, PVector.mult(d, bulletSpeed)));
-            sp -= 10;
+            bullets.add(new Bullet(pos, PVector.mult(d, bulletSpeed), bulletR, bulletDamage));
+            sp -= consum;
         }
     }
 
