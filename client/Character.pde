@@ -10,7 +10,7 @@ public class Character {
     int W;
     int H;
     public PVector pos;
-    
+    color circle;
     public PVector prePos;
     float speed = 8.0;
     float bulletSpeed = 20;
@@ -37,12 +37,14 @@ public class Character {
             speed = 8.0;
             bulletR = 30;
             bulletDamage = 20;
+            circle = color(255, 204, 00);
         }
         if(type.equals("b")){
             r = 50;
             speed = 16.0;
             bulletR = 20;
             bulletDamage = 10;
+            circle = color(255, 00, 204);
         }
 
     }
@@ -54,7 +56,7 @@ public class Character {
         fill(#ffffff);
         ellipse(pos.x, pos.y, r, r);
         strokeWeight(10);
-        stroke(#ffcc00);
+        stroke(circle);
         noFill();
         arc(pos.x, pos.y, (float)r + 30, (float)r + 30, a, a + PI);
         arc(pos.x, pos.y, (float)r + 60, (float)r + 60, b, b + PI / 2);

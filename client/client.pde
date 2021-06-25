@@ -17,6 +17,8 @@ boolean select = false;
 boolean waiting = false;
 boolean isWin = false;
 
+String selectedChapacter = "";
+
 UUID id;
 
 public enum Mode {
@@ -39,18 +41,32 @@ void draw() {
     background(#000000);
 
     if(mode == Mode.READY){
-        fill(#ffffff);
+        //a
+        fill(#ffcc00);
         rect(400, 600, 150, 50);
+        //b
+        fill(#ff00cc);
+        rect(1050, 600, 150, 50);
+        fill(#ffffff);
         textSize(70);
         textAlign(CENTER);
         text("Select Player", 800, 450);
-        rect(1050, 600, 150, 50);
         fill(#000000);
         textSize(30);
         textAlign(LEFT);
         text("PlayerA", 420, 635);
         text("PlayerB", 1070, 635);
 
+        if(selectedChapacter.equals("a")){
+            fill(#ffffff);
+            textAlign(CENTER);
+            text("selectd Player: A", 800, 550);
+        }else if(selectedChapacter.equals("b")){
+            fill(#ffffff);
+            textAlign(CENTER);
+            text("selectd Player: B", 800, 550);
+        }
+        
     }
     if(mode == Mode.PLAY){
         //サーバーに送信
@@ -145,16 +161,14 @@ void mousePressed() {
                 client.write("a" + " " + id.toString() +"\n");
                 fill(#ffffff);
                 textSize(45);
-                textAlign(CENTER);
-                text("selectd Player: A", 800, 550);
+                selectedChapacter = "a";
             }
             if(mouseX >= 1050 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 650 ){
                 //サーバーに送信
                 client.write("b" + " " + id.toString() +"\n");
                 textSize(45);
                 fill(#ffffff);
-                textAlign(CENTER);
-                text("selectd Player: B", 800, 550);
+                selectedChapacter = "b";
             }
             
         }
