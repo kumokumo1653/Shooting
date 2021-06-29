@@ -70,7 +70,7 @@ void draw() {
     }
     if(mode == Mode.PLAY){
         //サーバーに送信
-        client.write(name + " " + cMovement.x + " " + cMovement.y + " " +  cshoot + '\n');
+          client.write(name + " " + cMovement.x + " " + cMovement.y + " " +  cshoot + '\n');
         me.move(cMovement);
         enemy.move(eMovement);
 
@@ -107,9 +107,9 @@ void draw() {
         enemy.drawBullets();
 
         //spの回復
-        if(frameCount % 60 == 0){
-            me.recovery(1);
-            enemy.recovery(1);
+        if(frameCount % 30 == 0){
+            me.recovery(5);
+            enemy.recovery(5);
         }
     }
 
